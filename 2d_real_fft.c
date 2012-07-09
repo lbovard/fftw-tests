@@ -84,8 +84,7 @@ int main() {
         fftw_complex *out;
         fftw_plan forward, inverse;
         /* memory allocation */ 
-       // v=fftw_malloc(N*N*sizeof(double));   
-	v=fftw_alloc_real(N*N);
+        v=fftw_malloc((N+2)*N*sizeof(double));   
         k_x=fftw_malloc(N*(N/2+1)*sizeof(double));
         k_y=fftw_malloc(N*(N/2+1)*sizeof(double));
         out=(fftw_complex*)fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
@@ -118,18 +117,17 @@ int main() {
         for(i=1;i<N;i++) {
                 v[ind_sq(i,i+1)]=(double)(i+1);
        } 
-//        print_matrix(v,0,N); 
-
+        print_matrix(v,0,N); 
+	nl
         fftw_execute(forward); 
-//        print_fft(out,N);nl
-	print_fft_1d(out,N); nl
+        print_fft(out,N);nl
         derivative(out,k_x,N); 
- //       print_fft(out,N);
+        print_fft(out,N);nl
         fftw_execute(inverse);
 
         nl
         normalise(v,N);
-//	print_matrix(v,0,N);
+	print_matrix(v,0,N);
         /* clean up */
         fftw_destroy_plan(forward);
         fftw_destroy_plan(inverse);

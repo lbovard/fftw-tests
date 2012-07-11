@@ -3,18 +3,22 @@ program test
         implicit none
         include "fftw3.f03"
         
-        type(C_PTR) :: forward, inverse 
-
-        integer, parameter :: N=32
+        type(C_PTR) :: forward, inverse         
+        integer, parameter :: N=8
         integer, parameter :: Nr=(N/2)+1
         integer :: i,j 
 
-        real(kind=8), dimension(N,N+2) :: v
+
+        real(C_DOUBLE), pointer :: v(:,:)
+        type(C_PTR) :: p
+!        real(kind=8), dimension(N,N+2) :: v
         real(kind=8), dimension(:,:), allocatable :: kx,ky
 
         complex(kind=8), parameter :: ii=(0,1)
         complex(C_DOUBLE_COMPLEX), dimension(Nr,N) :: out
 
+        p = fftw_alloc_real(int((N+2)*N, C_SIZE_T))
+        call c_f_pointer(p, v, [N,N+2])
         forward = fftw_plan_dft_r2c_2d(N,N,v,out,FFTW_ESTIMATE)
         inverse = fftw_plan_dft_c2r_2d(N,N,out,v,FFTW_ESTIMATE)
         
@@ -39,6 +43,7 @@ program test
    !             print '(50f10.6)', ky(i,1:N)
    !     end do
         call fftw_execute_dft_r2c(forward, v, out)      
+        print *,out 
         out= out*ii*kx
         call fftw_execute_dft_c2r(inverse,out,v)
         print '()'

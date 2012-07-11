@@ -78,13 +78,14 @@ void derivative(fftw_complex *matrix,double *wn, int N) {
 
 }
 int main() {
-        int N=4,i,j,Nr=N/2+1;
+        int N=8,i,j,Nr=N/2+1;
         double *v;
         double *k_x,*k_y, tmp;
         fftw_complex *out;
         fftw_plan forward, inverse;
         /* memory allocation */ 
-        v=fftw_malloc((N+2)*N*sizeof(double));   
+        //v=fftw_malloc((N+2)*N*sizeof(double));   
+	v=fftw_alloc_real(N*(N));
         k_x=fftw_malloc(N*(N/2+1)*sizeof(double));
         k_y=fftw_malloc(N*(N/2+1)*sizeof(double));
         out=(fftw_complex*)fftw_malloc(N*(N/2+1)*sizeof(fftw_complex));
